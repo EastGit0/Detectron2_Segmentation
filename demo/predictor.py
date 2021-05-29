@@ -5,6 +5,7 @@ import multiprocessing as mp
 from collections import deque
 import cv2
 import torch
+import numpy as np
 
 from detectron2.data import MetadataCatalog
 from detectron2.engine.defaults import DefaultPredictor
@@ -46,8 +47,20 @@ class VisualizationDemo(object):
         """
         vis_output = None
         predictions = self.predictor(image)
+        #print((predictions["instances"].pred_masks.shape))
+        shape = predictions["instances"].pred_masks.shape
+        #print(predictions["instances"].pred_masks[0, :, :])
+        mask_matrix = predictions["instances"].pred_masks[0, :, :]
+        mask_array = mask_matrix.cpu().numpy()
+        #print(mask_array)
+        
         # Convert image from OpenCV BGR format to Matplotlib RGB format.
         image = image[:, :, ::-1]
+
+        image_ = np.copy(image)
+        image_[np.where(mask_array == False)] = 0.0
+        cv2.imwrite( "test_Mask.jpg", image_)
+        
         visualizer = Visualizer(image, self.metadata, instance_mode=self.instance_mode)
         if "panoptic_seg" in predictions:
             panoptic_seg, segments_info = predictions["panoptic_seg"]
@@ -86,8 +99,42 @@ class VisualizationDemo(object):
         """
         video_visualizer = VideoVisualizer(self.metadata, self.instance_mode)
 
-        def process_predictions(frame, predictions):
-            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        def process_predictions(frame, predictions, count):
+            print((predictions["instances"].pred_masks.shape))
+            shape = predictions["instances"].pred_masks.shape
+            height = shape[1]
+            width = shape[2]
+            
+            if (shape[0] != 0):
+                #print(predictions["instances"].pred_masks[0, :, :])
+                mask_matrix = predictions["instances"].pred_masks[0, :, :]
+                mask_array = mask_matrix.cpu().numpy()
+                #print(mask_array)
+                r_colored_mask = np.zeros((height, width))
+                g_colored_mask = np.zeros((height, width))
+                b_colored_mask = np.zeros((height, width))
+                
+                r_colored_mask[np.where(mask_array == False)] = 0
+                g_colored_mask[np.where(mask_array == False)] = 0
+                b_colored_mask[np.where(mask_array== False)] = 107
+
+                r_colored_mask[np.where(mask_array == True)] = 255
+                g_colored_mask[np.where(mask_array == True)] = 214
+                b_colored_mask[np.where(mask_array == True)] = 0
+
+                # compress to colored mask
+                #rgb = np.dstack((r_colored_mask, g_colored_mask, b_colored_mask)).astype(np.uint8)
+               
+                rgb = cv2.merge((b_colored_mask, g_colored_mask, r_colored_mask))
+                mask_name = "/home/cs348k/data/video/labels/kayvon/colored_mask" + str(count) + ".png"
+                cv2.imwrite(mask_name, rgb)
+                                
+                frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                frame_ = np.copy(frame)
+                frame_[np.where(mask_array == False)] = 0.0
+                filename = "/home/cs348k/data/video/labels/kayvon/mask_" + str(count) + ".jpg"
+                cv2.imwrite( filename, frame_)
+        
             if "panoptic_seg" in predictions:
                 panoptic_seg, segments_info = predictions["panoptic_seg"]
                 vis_frame = video_visualizer.draw_panoptic_seg_predictions(
@@ -125,8 +172,10 @@ class VisualizationDemo(object):
                 predictions = self.predictor.get()
                 yield process_predictions(frame, predictions)
         else:
+            count = 0
             for frame in frame_gen:
-                yield process_predictions(frame, self.predictor(frame))
+                yield process_predictions(frame, self.predictor(frame), count)
+                count += 1
 
 
 class AsyncPredictor:
