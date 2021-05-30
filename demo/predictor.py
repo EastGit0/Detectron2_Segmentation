@@ -105,6 +105,7 @@ class VisualizationDemo(object):
             height = shape[1]
             width = shape[2]
             
+            mask_array = mask_matrix.cpu().numpy()
             r_colored_mask = np.zeros((height, width))
             g_colored_mask = np.zeros((height, width))
             b_colored_mask = np.zeros((height, width))
@@ -112,7 +113,7 @@ class VisualizationDemo(object):
             if (shape[0] != 0):
                 #print(predictions["instances"].pred_masks[0, :, :])
                 mask_matrix = predictions["instances"].pred_masks[0, :, :]
-                mask_array = mask_matrix.cpu().numpy()
+                # mask_array = mask_matrix.cpu().numpy()
                 #print(mask_array)
                 
                 r_colored_mask[np.where(mask_array == False)] = 0
