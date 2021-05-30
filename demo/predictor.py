@@ -126,13 +126,13 @@ class VisualizationDemo(object):
                 #rgb = np.dstack((r_colored_mask, g_colored_mask, b_colored_mask)).astype(np.uint8)
                
                 rgb = cv2.merge((b_colored_mask, g_colored_mask, r_colored_mask))
-                mask_name = "/home/cs348k/data/video/labels/kayvon/colored_mask" + str(count) + ".png"
+                mask_name = "/home/cs348k/data/video/eli_1/labels/colored_mask" + str(count) + ".png"
                 cv2.imwrite(mask_name, rgb)
                                 
                 frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 frame_ = np.copy(frame)
                 frame_[np.where(mask_array == False)] = 0.0
-                filename = "/home/cs348k/data/video/labels/kayvon/mask_" + str(count) + ".jpg"
+                filename = "/home/cs348k/data/video/eli_1/labels/mask_" + str(count) + ".jpg"
                 cv2.imwrite( filename, frame_)
         
             if "panoptic_seg" in predictions:
