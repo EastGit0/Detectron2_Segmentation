@@ -104,12 +104,6 @@ class VisualizationDemo(object):
             shape = predictions["instances"].pred_masks.shape
             height = shape[1]
             width = shape[2]
-            
-            mask_matrix = predictions["instances"].pred_masks[0, :, :]
-            mask_array = mask_matrix.cpu().numpy()
-            r_colored_mask = np.zeros((height, width))
-            g_colored_mask = np.zeros((height, width))
-            b_colored_mask = np.zeros((height, width))
 
             if (shape[0] != 0):
                 #print(predictions["instances"].pred_masks[0, :, :])
@@ -117,6 +111,12 @@ class VisualizationDemo(object):
                 # mask_array = mask_matrix.cpu().numpy()
                 #print(mask_array)
                 
+                mask_matrix = predictions["instances"].pred_masks[0, :, :]
+                mask_array = mask_matrix.cpu().numpy()
+                r_colored_mask = np.zeros((height, width))
+                g_colored_mask = np.zeros((height, width))
+                b_colored_mask = np.zeros((height, width))
+
                 r_colored_mask[np.where(mask_array == False)] = 0
                 g_colored_mask[np.where(mask_array == False)] = 0
                 b_colored_mask[np.where(mask_array== False)] = 107
@@ -137,9 +137,9 @@ class VisualizationDemo(object):
                 cv2.imwrite( filename, frame_)
             else:
                 print(count)
-                r_colored_mask[np.where(mask_array == False)] = 0
-                g_colored_mask[np.where(mask_array == False)] = 0
-                b_colored_mask[np.where(mask_array== False)] = 107
+                r_colored_mask = np.full((height, width), 0)
+                g_colored_mask = np.full((height, width), 0)
+                b_colored_mask = np.full((height, width), 170)
                 rgb = cv2.merge((b_colored_mask, g_colored_mask, r_colored_mask))
                 mask_name = "/home/cs348k/data/video/eli_1/labels/colored_masks/colored_mask" + str(count) + ".png"
                 cv2.imwrite(mask_name, rgb)
