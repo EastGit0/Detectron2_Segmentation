@@ -122,9 +122,7 @@ class VisualizationDemo(object):
                 g_colored_mask[np.where(mask_array == True)] = 214
                 b_colored_mask[np.where(mask_array == True)] = 0
 
-                # compress to colored mask
-                #rgb = np.dstack((r_colored_mask, g_colored_mask, b_colored_mask)).astype(np.uint8)
-               
+                # compress to colored mask               
                 rgb = cv2.merge((b_colored_mask, g_colored_mask, r_colored_mask))
                 mask_name = "/home/cs348k/data/video/eli_1/labels/colored_masks/colored_mask" + str(count) + ".png"
                 cv2.imwrite(mask_name, rgb)
@@ -134,7 +132,15 @@ class VisualizationDemo(object):
                 frame_[np.where(mask_array == False)] = 0.0
                 filename = "/home/cs348k/data/video/eli_1/labels/segmentations/mask_" + str(count) + ".jpg"
                 cv2.imwrite( filename, frame_)
-        
+            else:
+                print(count)
+                r_colored_mask[np.where(mask_array == False)] = 0
+                g_colored_mask[np.where(mask_array == False)] = 0
+                b_colored_mask[np.where(mask_array== False)] = 107
+                rgb = cv2.merge((b_colored_mask, g_colored_mask, r_colored_mask))
+                mask_name = "/home/cs348k/data/video/eli_1/labels/colored_masks/colored_mask" + str(count) + ".png"
+                cv2.imwrite(mask_name, rgb)
+                
             if "panoptic_seg" in predictions:
                 panoptic_seg, segments_info = predictions["panoptic_seg"]
                 vis_frame = video_visualizer.draw_panoptic_seg_predictions(
