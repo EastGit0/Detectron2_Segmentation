@@ -35,7 +35,32 @@ class VisualizationDemo(object):
         else:
             self.predictor = DefaultPredictor(cfg)
 
-    def run_on_image(self, image):
+    def save_masks(self, mask_array, height, width, count):
+        r_colored_mask = np.zeros((height, width))
+        g_colored_mask = np.zeros((height, width))
+        b_colored_mask = np.zeros((height, width))
+
+        r_colored_mask[np.where(mask_array == False)] = 0
+        g_colored_mask[np.where(mask_array == False)] = 0
+        b_colored_mask[np.where(mask_array == False)] = 107
+
+        r_colored_mask[np.where(mask_array == True)] = 255
+        g_colored_mask[np.where(mask_array == True)] = 214
+        b_colored_mask[np.where(mask_array == True)] = 0
+
+        # compress to colored mask
+        rgb = cv2.merge((b_colored_mask, g_colored_mask, r_colored_mask))
+        mask_name = "/home/cs348k/data/student/ground_truths/ground_truth_" + str(count) + ".png"
+        cv2.imwrite(mask_name, rgb)
+        print("new ground truth generated: " + mask_name)
+
+        #frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        #frame_ = np.copy(frame)
+        #frame_[np.where(mask_array == False)] = 0.0
+        #filename = "/home/cs348k/data/video/eli_1/labels/segmentations/mask_" + str(count) + ".jpg"
+        #cv2.imwrite( filename, frame_)
+                
+    def run_on_image(self, image, count):
         """
         Args:
             image (np.ndarray): an image of shape (H, W, C) (in BGR order).
@@ -47,19 +72,26 @@ class VisualizationDemo(object):
         """
         vis_output = None
         predictions = self.predictor(image)
-        #print((predictions["instances"].pred_masks.shape))
-        shape = predictions["instances"].pred_masks.shape
-        #print(predictions["instances"].pred_masks[0, :, :])
-        mask_matrix = predictions["instances"].pred_masks[0, :, :]
-        mask_array = mask_matrix.cpu().numpy()
-        #print(mask_array)
-        
-        # Convert image from OpenCV BGR format to Matplotlib RGB format.
-        image = image[:, :, ::-1]
+        print("in run on image outside shape check")
+        print(predictions)
 
-        image_ = np.copy(image)
-        image_[np.where(mask_array == False)] = 0.0
-        cv2.imwrite( "test_Mask.jpg", image_)
+        # why doesn't the prediction work?
+        
+        shape = predictions["instances"].pred_masks.shape
+        if (shape[0] != 0):
+            height = shape[1]
+            width = shape[2]
+            mask_matrix = predictions["instances"].pred_masks[0, :, :]
+            mask_array = mask_matrix.cpu().numpy()
+            #print(mask_array, height, width)
+            print("in run on image")
+            self.save_masks(mask_array, height, width, count)
+
+            #frame = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+            #frame_ = np.copy(frame)
+            #frame_[np.where(mask_array == False)] = 0.0
+            #filename = "/home/cs348k/data/student/ground_truths/ground_truth_" + str(count) + ".png"
+            #cv2.imwrite( filename, frame_)
         
         visualizer = Visualizer(image, self.metadata, instance_mode=self.instance_mode)
         if "panoptic_seg" in predictions:
@@ -102,48 +134,13 @@ class VisualizationDemo(object):
         def process_predictions(frame, predictions, count):
             print((predictions["instances"].pred_masks.shape))
             shape = predictions["instances"].pred_masks.shape
-            height = shape[1]
-            width = shape[2]
-
             if (shape[0] != 0):
-                #print(predictions["instances"].pred_masks[0, :, :])
-                # mask_matrix = predictions["instances"].pred_masks[0, :, :]
-                # mask_array = mask_matrix.cpu().numpy()
-                #print(mask_array)
-                
+                height = shape[1]
+                width = shape[2]
                 mask_matrix = predictions["instances"].pred_masks[0, :, :]
                 mask_array = mask_matrix.cpu().numpy()
-                r_colored_mask = np.zeros((height, width))
-                g_colored_mask = np.zeros((height, width))
-                b_colored_mask = np.zeros((height, width))
-
-                r_colored_mask[np.where(mask_array == False)] = 0
-                g_colored_mask[np.where(mask_array == False)] = 0
-                b_colored_mask[np.where(mask_array== False)] = 107
-
-                r_colored_mask[np.where(mask_array == True)] = 255
-                g_colored_mask[np.where(mask_array == True)] = 214
-                b_colored_mask[np.where(mask_array == True)] = 0
-
-                # compress to colored mask               
-                rgb = cv2.merge((b_colored_mask, g_colored_mask, r_colored_mask))
-                mask_name = "/home/cs348k/data/video/eli_1/labels/colored_masks/colored_mask" + str(count) + ".png"
-                cv2.imwrite(mask_name, rgb)
-                                
-                frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-                frame_ = np.copy(frame)
-                frame_[np.where(mask_array == False)] = 0.0
-                filename = "/home/cs348k/data/video/eli_1/labels/segmentations/mask_" + str(count) + ".jpg"
-                cv2.imwrite( filename, frame_)
-            else:
-                print(count)
-                r_colored_mask = np.full((height, width), 0)
-                g_colored_mask = np.full((height, width), 0)
-                b_colored_mask = np.full((height, width), 170)
-                rgb = cv2.merge((b_colored_mask, g_colored_mask, r_colored_mask))
-                mask_name = "/home/cs348k/data/video/eli_1/labels/colored_masks/colored_mask" + str(count) + ".png"
-                cv2.imwrite(mask_name, rgb)
-                
+                self.save_masks(frame, mask_array, height, width)
+            
             if "panoptic_seg" in predictions:
                 panoptic_seg, segments_info = predictions["panoptic_seg"]
                 vis_frame = video_visualizer.draw_panoptic_seg_predictions(
