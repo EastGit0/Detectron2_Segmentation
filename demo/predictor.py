@@ -87,28 +87,32 @@ class VisualizationDemo(object):
             print("in run on image")
             self.save_masks(mask_array, height, width, count)
 
+            return True
             #frame = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
             #frame_ = np.copy(frame)
             #frame_[np.where(mask_array == False)] = 0.0
             #filename = "/home/cs348k/data/student/ground_truths/ground_truth_" + str(count) + ".png"
             #cv2.imwrite( filename, frame_)
-        
-        visualizer = Visualizer(image, self.metadata, instance_mode=self.instance_mode)
-        if "panoptic_seg" in predictions:
-            panoptic_seg, segments_info = predictions["panoptic_seg"]
-            vis_output = visualizer.draw_panoptic_seg_predictions(
-                panoptic_seg.to(self.cpu_device), segments_info
-            )
         else:
-            if "sem_seg" in predictions:
-                vis_output = visualizer.draw_sem_seg(
-                    predictions["sem_seg"].argmax(dim=0).to(self.cpu_device)
-                )
-            if "instances" in predictions:
-                instances = predictions["instances"].to(self.cpu_device)
-                vis_output = visualizer.draw_instance_predictions(predictions=instances)
+            return False
 
-        return predictions, vis_output
+        
+        #visualizer = Visualizer(image, self.metadata, instance_mode=self.instance_mode)
+        #if "panoptic_seg" in predictions:
+        #    panoptic_seg, segments_info = predictions["panoptic_seg"]
+        #    vis_output = visualizer.draw_panoptic_seg_predictions(
+        #        panoptic_seg.to(self.cpu_device), segments_info
+        #    )
+        #else:
+        #    if "sem_seg" in predictions:
+        #        vis_output = visualizer.draw_sem_seg(
+        #            predictions["sem_seg"].argmax(dim=0).to(self.cpu_device)
+        #        )
+        #    if "instances" in predictions:
+        #        instances = predictions["instances"].to(self.cpu_device)
+        #        vis_output = visualizer.draw_instance_predictions(predictions=instances)
+
+        #return predictions, vis_output
 
     def _frame_from_video(self, video):
         while video.isOpened():
