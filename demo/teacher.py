@@ -56,6 +56,8 @@ class Classroom_Process(multiprocessing.Process):
                           val_loader=None,
                           train_logger=None)
 
+        self.queue.put(True)
+
         while True:
             print("Waiting for Train signal")
             start_training = self.queue.get()
@@ -83,8 +85,12 @@ def main():
     classroom.start()
     threshold = 0 # what should this be?
     
-    #change this to a constant while loop
+    ## Wait for Classroom
+    print("Waiting for classroom before starting")
+    queue.get()
     print("Start Loop")
+
+    #change this to a constant while loop
     while (True):
         if 0:
         # if os.path.isfile(next_path):
