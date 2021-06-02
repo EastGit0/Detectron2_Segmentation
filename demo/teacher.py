@@ -11,7 +11,7 @@ from detectron2.config import get_cfg
 from detectron2.data.detection_utils import read_image
 
 sys.path.insert(1,'/home/cs348k/pytorch_segmentation/')
-sys.path.insert(1,'/home/cs348k/pytorch_segmentation/classroom_trainer.py')
+# sys.path.insert(1,'/home/cs348k/pytorch_segmentation/classroom_trainer.py')
 import dataloaders
 import models
 from classroom_trainer import ClassroomTrainer
