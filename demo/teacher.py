@@ -76,9 +76,9 @@ def main():
     count = 0
     next_path = args.input[0] + 'frame_' + str(count + 1) + '.jpg'
 
-    config = json.load(open(args.config))
+    config = json.load(open(args.config_student))
     queue = multiprocessing.Queue()
-    classroom = Classroom_Process(0, config, args.resume, queue)
+    classroom = Classroom_Process(0, config, args.resume_student, queue)
     threshold = 0 # what should this be?
     
     #change this to a constant while loop
