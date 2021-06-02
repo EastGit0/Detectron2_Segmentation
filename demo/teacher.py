@@ -77,8 +77,6 @@ def main():
     count = 1
     next_path = args.input[0] + 'frame_' + str(count) + '.jpg'
 
-    print(next_path)
-
     config = json.load(open(args.config_student))
     queue = multiprocessing.Queue()
     classroom = Classroom_Process(0, config, args.resume_student, queue)
