@@ -114,7 +114,7 @@ def main():
                   raw_score = sum(sum(diff, []))
                 
                 # define threshold
-                if count == 16:
+                if count % 16 == 0:
                 # if (raw_score > threshold):
                     print("Retrain!!")
 
