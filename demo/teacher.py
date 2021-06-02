@@ -38,7 +38,7 @@ class Classroom_Process(multiprocessing.Process):
         print("Setting up classroom")
 
         # DATA LOADERS
-        # train_loader = get_instance(dataloaders, 'train_loader', self.config)
+        train_loader = get_instance(dataloaders, 'train_loader', self.config)
 
         # MODEL
         model = get_instance(models, 'arch', self.config, 81)
@@ -47,14 +47,14 @@ class Classroom_Process(multiprocessing.Process):
         # LOSS
         loss = getattr(losses, self.config['loss'])(ignore_index = self.config['ignore_index'])
 
-        # trainer = ClassroomTrainer(
-        #                   model=model,
-        #                   loss=loss,
-        #                   resume=self.resume,
-        #                   config=self.config,
-        #                   train_loader=train_loader,
-        #                   val_loader=None,
-        #                   train_logger=None)
+        trainer = ClassroomTrainer(
+                          model=model,
+                          loss=loss,
+                          resume=self.resume,
+                          config=self.config,
+                          train_loader=train_loader,
+                          val_loader=None,
+                          train_logger=None)
 
         self.queue.put(True)
 
@@ -64,20 +64,21 @@ class Classroom_Process(multiprocessing.Process):
             if start_training:
                 print("Begin Training on JITNetX")
 
-                train_loader = get_instance(dataloaders, 'train_loader', self.config)
+                # train_loader = get_instance(dataloaders, 'train_loader', self.config)
 
-                trainer = ClassroomTrainer(
-                          model=model,
-                          loss=loss,
-                          resume=self.resume,
-                          config=self.config,
-                          train_loader=train_loader,
-                          val_loader=None,
-                          train_logger=None)
+                # trainer = ClassroomTrainer(
+                #           model=model,
+                #           path=path,
+                #           loss=loss,
+                #           resume=self.resume,
+                #           config=self.config,
+                #           train_loader=train_loader,
+                #           val_loader=None,
+                #           train_logger=None)
 
                 weights_count = trainer.train()
                 self.queue.put(weights_count)
-                del trainer
+                # del trainer
                 
 
 def main():
