@@ -37,10 +37,10 @@ class Classroom_Process(multiprocessing.Process):
         print("Setting up classroom")
 
         # DATA LOADERS
-        train_loader = get_instance(dataloaders, 'train_loader', self.config)
+        # train_loader = get_instance(dataloaders, 'train_loader', self.config)
 
         # MODEL
-        model = get_instance(models, 'arch', self.config, train_loader.dataset.num_classes)
+        model = get_instance(models, 'arch', self.config, 81)
         print(f'\n{model}\n')
 
         # LOSS
@@ -62,7 +62,9 @@ class Classroom_Process(multiprocessing.Process):
             start_training = self.queue.get()
             if start_training:
                 print("Begin Training on JITNetX")
-                
+
+                train_loader = get_instance(dataloaders, 'train_loader', self.config)
+
                 trainer = ClassroomTrainer(
                           model=model,
                           loss=loss,
