@@ -67,9 +67,6 @@ class Classroom_Process(multiprocessing.Process):
                 self.queue.put(weights_count)
                 
 
-                
-
-
 def main():
     multiprocessing.set_start_method("spawn", force=True)
     args = demo.get_parser().parse_args()
@@ -77,8 +74,8 @@ def main():
 
     predictor = VisualizationDemo(cfg)
     directory = args.input[0]
-    count = 0
-    next_path = args.input[0] + 'frame_' + str(count + 1) + '.jpg'
+    count = 1
+    next_path = args.input[0] + 'frame_' + str(count) + '.jpg'
 
     config = json.load(open(args.config_student))
     queue = multiprocessing.Queue()
@@ -87,14 +84,13 @@ def main():
     threshold = 0 # what should this be?
     
     ## Wait for Classroom
-    print("Waiting for classroom before starting")
+    # print("Waiting for classroom before starting")
     queue.get()
-    print("Start Loop")
+    print("Start Teacher Loop")
 
     #change this to a constant while loop
     while (True):
-        if 0:
-        # if os.path.isfile(next_path):
+        if os.path.isfile(next_path):
             f = next_path
             img = read_image(f, format="BGR") 
             print("Image being segmented: " + f)
@@ -107,17 +103,19 @@ def main():
                 print("no ground truth generated for " + next_path)
                 #os.system('rm ' + next_path)
             else:
-                output_dir = args.output
-                #prediction = read_image(output_dir + 'masks/prediction_' + str(count))
-                prediction_tensor = torch.load(output_dir + 'masks/prediction_' + str(count) + '.pt')
-                prediction_mask = prediction_tensor.cpu().numpy()
-                
-                # convert to np arrays
-                diff = ground_truth.astype(int) - prediction.astype(int)
-                raw_score = sum(sum(diff, []))
+                if 0:
+                  output_dir = args.output
+                  #prediction = read_image(output_dir + 'masks/prediction_' + str(count))
+                  prediction_tensor = torch.load(output_dir + 'predictions/prediction_' + str(count) + '.pt')
+                  prediction_mask = prediction_tensor.cpu().numpy()
+                  
+                  # convert to np arrays
+                  diff = ground_truth.astype(int) - prediction.astype(int)
+                  raw_score = sum(sum(diff, []))
                 
                 # define threshold
-                if (raw_score > threshold):
+                if count == 16:
+                # if (raw_score > threshold):
                     print("Retrain!!")
 
                     ## Signal Trainer to start work
