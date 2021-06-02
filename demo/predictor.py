@@ -72,8 +72,6 @@ class VisualizationDemo(object):
         """
         vis_output = None
         predictions = self.predictor(image)
-        print("in run on image outside shape check")
-        print(predictions)
 
         # why doesn't the prediction work?
         
@@ -84,17 +82,16 @@ class VisualizationDemo(object):
             mask_matrix = predictions["instances"].pred_masks[0, :, :]
             mask_array = mask_matrix.cpu().numpy()
             #print(mask_array, height, width)
-            print("in run on image")
             self.save_masks(mask_array, height, width, count)
 
-            return True
+            return True, mask_array
             #frame = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
             #frame_ = np.copy(frame)
             #frame_[np.where(mask_array == False)] = 0.0
             #filename = "/home/cs348k/data/student/ground_truths/ground_truth_" + str(count) + ".png"
             #cv2.imwrite( filename, frame_)
         else:
-            return False
+            return False, 0
 
         
         #visualizer = Visualizer(image, self.metadata, instance_mode=self.instance_mode)

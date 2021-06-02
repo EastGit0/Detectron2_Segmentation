@@ -77,9 +77,9 @@ def main():
     next_path = args.input[0] + 'frame_' + str(count + 1) + '.jpg'
 
     config = json.load(open(args.config))
-
     queue = multiprocessing.Queue()
     classroom = Classroom_Process(0, config, args.resume, queue)
+    threshold = 0 # what should this be?
     
     #change this to a constant while loop
     while (True):
@@ -89,7 +89,7 @@ def main():
             img = read_image(f, format="BGR") 
             print("Image being segmented: " + f)
             # returns boolean value for if ground truth was generated and binary array for the mask being generated
-            ground_truth_found = predictor.run_on_image(img, count)
+            ground_truth_found, ground_truth_mask = predictor.run_on_image(img, count)
                 
             # compare the ground truths generated above to the masks in the masks in /home/cs348k/data/student/masks
             if (not ground_truth_found):
@@ -98,16 +98,13 @@ def main():
                 #os.system('rm ' + next_path)
             else:
                 output_dir = args.output
-                ground_truth_path = output_dir + '/ground_truths/ground_truth_' + str(count) + '.png'
-                print("Ground truth path: " + ground_truth_path)
-                ground_truth = read_image(ground_truth_path)
-
-                # prediction = read_image(output_dir + 'masks/prediction_' + str(count))
-                
+                #prediction = read_image(output_dir + 'masks/prediction_' + str(count))
+                prediction_tensor = torch.load(output_dir + 'masks/prediction_' + str(count) + '.pt')
+                prediction_mask = prediction_tensor.cpu().numpy()
                 
                 # convert to np arrays
-                #diff = ground_truth - prediction
-                # raw_score = sum(sum(diff, []))
+                diff = ground_truth.astype(int) - prediction.astype(int)
+                raw_score = sum(sum(diff, []))
                 
                 # define threshold
                 if (raw_score > threshold):
