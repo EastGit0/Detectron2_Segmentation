@@ -14,8 +14,8 @@ sys.path.insert(1,'/home/cs348k/pytorch_segmentation/')
 sys.path.insert(1,'/home/cs348k/pytorch_segmentation/classroom_trainer.py')
 import dataloaders
 import models
-# from classroom_trainer import ClassroomTrainer
-import classroom_trainer
+from .classroom_trainer import ClassroomTrainer
+# import classroom_trainer
 from utils import losses
 from utils import Logger
 
