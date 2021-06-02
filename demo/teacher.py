@@ -71,6 +71,7 @@ class Classroom_Process(multiprocessing.Process):
 
 
 def main():
+    multiprocessing.set_start_method("spawn", force=True)
     args = demo.get_parser().parse_args()
     cfg = demo.setup_cfg(args)
 
