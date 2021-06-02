@@ -13,7 +13,7 @@ from detectron2.data.detection_utils import read_image
 sys.path.insert(1,'/home/cs348k/pytorch_segmentation')
 import dataloaders
 import models
-from classroom_trainer import ClassroomTrainer
+# from classroom_trainer import ClassroomTrainer
 from utils import losses
 from utils import Logger
 
