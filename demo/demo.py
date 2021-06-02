@@ -71,6 +71,22 @@ def get_parser():
         default=[],
         nargs=argparse.REMAINDER,
     )
+
+    ## Training args
+    parser.add_argument(
+        "--config",
+        help="Path to the config file (default: config_student.json)",
+        default='config_student.json',
+        type=str
+    )
+    parser.add_argument(
+        "--resume",
+        help="Path to the .pth model checkpoint to resume training",
+        default=None,
+        type=str
+    )
+
+
     return parser
 
 
