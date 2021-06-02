@@ -38,7 +38,6 @@ class Classroom_Process(multiprocessing.Process):
 
         # DATA LOADERS
         train_loader = get_instance(dataloaders, 'train_loader', self.config)
-        # val_loader = get_instance(dataloaders, 'val_loader', self.config)
 
         # MODEL
         model = get_instance(models, 'arch', self.config, train_loader.dataset.num_classes)
@@ -47,14 +46,14 @@ class Classroom_Process(multiprocessing.Process):
         # LOSS
         loss = getattr(losses, self.config['loss'])(ignore_index = self.config['ignore_index'])
 
-        trainer = ClassroomTrainer(
-                          model=model,
-                          loss=loss,
-                          resume=self.resume,
-                          config=self.config,
-                          train_loader=train_loader,
-                          val_loader=None,
-                          train_logger=None)
+        # trainer = ClassroomTrainer(
+        #                   model=model,
+        #                   loss=loss,
+        #                   resume=self.resume,
+        #                   config=self.config,
+        #                   train_loader=train_loader,
+        #                   val_loader=None,
+        #                   train_logger=None)
 
         self.queue.put(True)
 
@@ -63,8 +62,19 @@ class Classroom_Process(multiprocessing.Process):
             start_training = self.queue.get()
             if start_training:
                 print("Begin Training on JITNetX")
+                
+                trainer = ClassroomTrainer(
+                          model=model,
+                          loss=loss,
+                          resume=self.resume,
+                          config=self.config,
+                          train_loader=train_loader,
+                          val_loader=None,
+                          train_logger=None)
+
                 weights_count = trainer.train()
                 self.queue.put(weights_count)
+                del trainer
                 
 
 def main():
