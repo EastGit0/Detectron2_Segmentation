@@ -80,9 +80,11 @@ def main():
     config = json.load(open(args.config_student))
     queue = multiprocessing.Queue()
     classroom = Classroom_Process(0, config, args.resume_student, queue)
+    classroom.start()
     threshold = 0 # what should this be?
     
     #change this to a constant while loop
+    print("Start Loop")
     while (True):
         if 0:
         # if os.path.isfile(next_path):
