@@ -17,6 +17,7 @@ import models
 from classroom_trainer import ClassroomTrainer
 from utils import losses
 from utils import Logger
+import time
 
 # Checks folder where student places tensor representation of mask and corresponding image of frame and runs demo script on images to generate ground truths
 
@@ -103,6 +104,7 @@ def main():
     #change this to a constant while loop
     while (True):
         if os.path.isfile(next_path):
+            time.sleep(2)
             f = next_path
             img = read_image(f, format="BGR") 
             print("Image being segmented: " + f)
