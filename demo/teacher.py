@@ -78,7 +78,7 @@ def main():
 
     predictor = VisualizationDemo(cfg)
     directory = args.input[0]
-    count = 355
+    count = 1000
     next_path = args.input[0] + 'frame_' + str(count) + '.jpg'
 
     config = json.load(open(args.config_student))
@@ -95,11 +95,11 @@ def main():
     #change this to a constant while loop
     while (True):
         if os.path.isfile(next_path):
-            # load_time = os.path.getmtime(next_path)
-            time.sleep(2)
-            # while (load_time != os.path.getmtime(next_path)):
-            #     load_time = os.path.getmtime(next_path)
-            #     time.sleep(0.05)
+            load_time = os.path.getsize(next_path)
+            time.sleep(.25)
+            while (load_time != os.path.getsize(next_path)):
+                load_time = os.path.getsize(next_path)
+                time.sleep(0.25)
 
             f = next_path
             img = read_image(f, format="BGR") 
