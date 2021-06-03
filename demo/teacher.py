@@ -95,11 +95,11 @@ def main():
     #change this to a constant while loop
     while (True):
         if os.path.isfile(next_path):
-            load_time = os.path.getsize(next_path)
-            time.sleep(.25)
-            while (load_time != os.path.getsize(next_path)):
-                load_time = os.path.getsize(next_path)
-                time.sleep(0.25)
+            # load_time = os.path.getsize(next_path)
+            # time.sleep(.25)
+            # while (load_time != os.path.getsize(next_path)):
+            #     load_time = os.path.getsize(next_path)
+            #     time.sleep(0.25)
 
             f = next_path
             img = read_image(f, format="BGR") 
@@ -124,7 +124,7 @@ def main():
                   raw_score = sum(sum(diff, []))
                 
                 # define threshold
-                if count % 1024 == 0:
+                if count % 256 == 0:
                 # if (raw_score > threshold):
                     print("Retrain!!")
 
