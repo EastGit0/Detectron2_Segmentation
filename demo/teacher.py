@@ -104,7 +104,7 @@ def main():
             if (not ground_truth_found):
                 # remove original frame
                 print("no ground truth generated for " + next_path)
-                #os.system('rm ' + next_path)
+                os.system('rm ' + next_path)
             else:
                 if 0:
                   output_dir = args.output
@@ -128,7 +128,7 @@ def main():
                     weights_count = queue.get()
 
                     ## Delete Frames and masks used for training?
-                    os.system("rm /home/cs348k/data/student/weights/{}/weights_{}".format(self.config['arch']['type'], str(weights_count-1)))
+                    os.system("rm /home/cs348k/data/student/weights/{}/weights_{}.pth".format(config['arch']['type'], str(weights_count-1)))
 
                     ## Send weights to Local JITNet
 
