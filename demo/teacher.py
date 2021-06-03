@@ -105,7 +105,7 @@ def main():
             img = read_image(f, format="BGR") 
             print("Image being segmented: " + f)
             # returns boolean value for if ground truth was generated and binary array for the mask being generated
-            ground_truth_found, ground_truth_mask = predictor.run_on_image(img, count)
+            # ground_truth_found, ground_truth_mask = predictor.run_on_image(img, count)
                 
             # compare the ground truths generated above to the masks in the masks in /home/cs348k/data/student/masks
             if (not ground_truth_found):
@@ -135,7 +135,7 @@ def main():
                     weights_count = queue.get()
 
                     ## Delete Frames and masks used for training?
-                    os.system("rm /home/cs348k/data/student/weights/{}/weights_{}.pth".format(config['arch']['type'], str(weights_count-1)))
+                    # os.system("rm /home/cs348k/data/student/weights/{}/weights_{}.pth".format(config['arch']['type'], str(weights_count-1)))
 
                     ## Send weights to Local JITNet
 
