@@ -139,8 +139,8 @@ def main():
 
                     ## Send weights to Local JITNet
 
-              count += 1
-              next_path = args.input[0] + 'frame_' + str(count) + '.jpg'
+            count += 1
+            next_path = args.input[0] + 'frame_' + str(count) + '.jpg'
         
             
         # send updated weights to student network
