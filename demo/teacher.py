@@ -108,7 +108,9 @@ def main():
             # ground_truth_found, ground_truth_mask = predictor.run_on_image(img, count)
                 
             # compare the ground truths generated above to the masks in the masks in /home/cs348k/data/student/masks
-            if (not ground_truth_found):
+            
+            # if (not ground_truth_found):
+            if 0:
                 # remove original frame
                 print("no ground truth generated for " + next_path)
                 os.system('rm ' + next_path)
