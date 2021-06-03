@@ -62,9 +62,9 @@ class Classroom_Process(multiprocessing.Process):
             if max_frame > 0:
                 print("Begin Training on JITNetX")
 
-                self.config["train_loader"]["max_frame"] = max_frame
+                self.config["train_loader"]["args"]["max_frame"] = max_frame
 
-                print("MAX FRAME CONFIG: ", self.config["train_loader"]["max_frame"])
+                print("MAX FRAME CONFIG: ", self.config["train_loader"]["args"]["max_frame"])
 
                 # DATA LOADERS
                 train_loader = get_instance(dataloaders, 'train_loader', self.config)
