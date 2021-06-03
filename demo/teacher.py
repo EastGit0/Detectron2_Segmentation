@@ -78,7 +78,7 @@ def main():
 
     predictor = VisualizationDemo(cfg)
     directory = args.input[0]
-    count = 1
+    count = 355
     next_path = args.input[0] + 'frame_' + str(count) + '.jpg'
 
     config = json.load(open(args.config_student))
