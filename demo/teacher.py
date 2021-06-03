@@ -96,7 +96,7 @@ def main():
     while (True):
         if os.path.isfile(next_path):
             # load_time = os.path.getmtime(next_path)
-            time.sleep(1)
+            time.sleep(2)
             # while (load_time != os.path.getmtime(next_path)):
             #     load_time = os.path.getmtime(next_path)
             #     time.sleep(0.05)
