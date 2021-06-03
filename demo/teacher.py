@@ -57,9 +57,14 @@ class Classroom_Process(multiprocessing.Process):
 
         while True:
             print("Waiting for Train signal")
-            start_training = self.queue.get()
-            if start_training:
+            max_frame = self.queue.get()
+            print("MAX FRAME: ", max_frame)
+            if max_frame > 0:
                 print("Begin Training on JITNetX")
+
+                self.config["train_loader"]["max_frame"] = max_frame
+
+                print("MAX FRAME CONFIG: ", self.config["train_loader"]["max_frame"])
 
                 # DATA LOADERS
                 train_loader = get_instance(dataloaders, 'train_loader', self.config)
@@ -93,7 +98,10 @@ def main():
     #change this to a constant while loop
     while (True):
         if os.path.isfile(next_path):
-            time.sleep(2)
+            time.sleep(0.05)
+            load_time = os.path.getmtime(next_path)
+            while (load_time != os.path.getmtime(next_path))
+
             f = next_path
             img = read_image(f, format="BGR") 
             print("Image being segmented: " + f)
@@ -122,7 +130,7 @@ def main():
                     print("Retrain!!")
 
                     ## Signal Trainer to start work
-                    queue.put(True)
+                    queue.put(count)
 
                     ## Wait here now until training done?
                     weights_count = queue.get()
