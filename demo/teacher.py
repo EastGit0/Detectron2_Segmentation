@@ -77,7 +77,7 @@ class Classroom_Process(multiprocessing.Process):
                 #           train_logger=None)
                 # trainer.update_dataset(train_loader)
 
-                weights_count = trainer.train()
+                weights_count = trainer.train(train_loader)
                 self.queue.put(weights_count)
                 # del trainer
                 del train_loader
