@@ -98,9 +98,11 @@ def main():
     #change this to a constant while loop
     while (True):
         if os.path.isfile(next_path):
-            time.sleep(0.05)
             load_time = os.path.getmtime(next_path)
-            while (load_time != os.path.getmtime(next_path))
+            time.sleep(0.05)
+            while (load_time != os.path.getmtime(next_path)):
+                load_time = os.path.getmtime(next_path)
+                time.sleep(0.05)
 
             f = next_path
             img = read_image(f, format="BGR") 
