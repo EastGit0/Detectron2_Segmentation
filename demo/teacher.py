@@ -78,7 +78,7 @@ def main():
 
     predictor = VisualizationDemo(cfg)
     directory = args.input[0]
-    count = 1000
+    count = 1
     next_path = args.input[0] + 'frame_' + str(count) + '.jpg'
 
     config = json.load(open(args.config_student))
@@ -139,8 +139,8 @@ def main():
 
                     ## Send weights to Local JITNet
 
-            count += 1
-            next_path = args.input[0] + 'frame_' + str(count) + '.jpg'
+              count += 1
+              next_path = args.input[0] + 'frame_' + str(count) + '.jpg'
         
             
         # send updated weights to student network
