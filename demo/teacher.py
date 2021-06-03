@@ -78,7 +78,7 @@ def main():
 
     predictor = VisualizationDemo(cfg)
     directory = args.input[0]
-    count = 300
+    count = 1
     next_path = args.input[0] + 'frame_' + str(count) + '.jpg'
 
     config = json.load(open(args.config_student))
@@ -124,7 +124,7 @@ def main():
                   raw_score = sum(sum(diff, []))
                 
                 # define threshold
-                if count % 512 == 0: 
+                if count % 32 == 0: 
                 # if (raw_score > threshold):
                     print("Retrain!!")
 
