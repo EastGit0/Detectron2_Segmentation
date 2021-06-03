@@ -37,9 +37,6 @@ class Classroom_Process(multiprocessing.Process):
     def run(self):
         print("Setting up classroom")
 
-        # DATA LOADERS
-        # train_loader = get_instance(dataloaders, 'train_loader', self.config)
-
         # MODEL
         model = get_instance(models, 'arch', self.config, 81)
         print(f'\n{model}\n')
@@ -64,22 +61,11 @@ class Classroom_Process(multiprocessing.Process):
             if start_training:
                 print("Begin Training on JITNetX")
 
+                # DATA LOADERS
                 train_loader = get_instance(dataloaders, 'train_loader', self.config)
-
-                # trainer = ClassroomTrainer(
-                #           model=model,
-                #           path=path,
-                #           loss=loss,
-                #           resume=self.resume,
-                #           config=self.config,
-                #           train_loader=train_loader,
-                #           val_loader=None,
-                #           train_logger=None)
-                # trainer.update_dataset(train_loader)
 
                 weights_count = trainer.train(train_loader)
                 self.queue.put(weights_count)
-                # del trainer
                 del train_loader
                 
 
@@ -142,13 +128,9 @@ def main():
                     weights_count = queue.get()
 
                     ## Delete Frames and masks used for training?
+                    os.system("rm /home/cs348k/data/student/weights/{}/weights_{}".format(self.config['arch']['type'], str(weights_count-1)))
 
                     ## Send weights to Local JITNet
-                    # self.ssh_weights = SSHClient()
-                    # self.ssh_weights.load_system_host_keys()
-                    # self.ssh_weights.connect('35.233.229.168')
-                    # self.scp_weights = SCPClient(self.ssh_weights.get_transport())
-                    # self.scp_weights.put("weights_{}.pth".format(weights_count), remote_path='/home/cs348k/data/student/frames')
 
             count += 1
             next_path = args.input[0] + 'frame_' + str(count) + '.jpg'
